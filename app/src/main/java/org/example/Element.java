@@ -20,6 +20,8 @@ public class Element implements IDebuggable, IDrawable {
     private Color color;
     protected Image img;
 
+
+    protected String name;
     public Element() {
 
         this.rectangle = Rectangle2D.EMPTY;
@@ -44,6 +46,13 @@ public class Element implements IDebuggable, IDrawable {
     @Override
     public void setDebug(boolean value) {
         this.debug = value;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -115,8 +124,8 @@ public class Element implements IDebuggable, IDrawable {
                 (this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE,
                 (this.getRectangle().getMinY()) * Game.SCALE - 5);
 
-        gc.setFill(this.color);
-        gc.fillRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
+       // gc.setFill(this.color);
+       // gc.fillRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
 
     }
 
@@ -126,9 +135,9 @@ public class Element implements IDebuggable, IDrawable {
 
     @Override
     public void paint(GraphicsContext gc) {
-       // gc.setStroke(this.getColor());
+        gc.setStroke(this.getColor());
 
-        //gc.strokeRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
+        gc.strokeRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
         if (this.isDebug()) {
 
             this.debug(gc);

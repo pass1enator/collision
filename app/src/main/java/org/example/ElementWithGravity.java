@@ -98,8 +98,9 @@ public abstract class ElementWithGravity extends ElementMovable implements IGrav
     }
 
     @Override
-    public void update(ArrayList<Element> elements){//}, Level l) {
+    public void update(ArrayList<Element> elements) {//}, Level l) {
         if (this.getState() == State.RUNNING) {
+
             if (this.isActiveHorizontalGravity()) {
                 this.vx = this.vx + this.gx;
             }
@@ -107,11 +108,16 @@ public abstract class ElementWithGravity extends ElementMovable implements IGrav
                 this.vy = this.vy + this.gy;
             }
             super.update(elements); //,l);
-        } else {
-            System.out.println("parado");
         }
 
+
+   // else {
+     //       System.out.println("parado");
+    //    }
+
     }
+
+
 
     @Override
     public void move() {

@@ -19,7 +19,15 @@ public class ElementWithJump extends ElementWithGravity {
         this.jumping = false;
 
     }
+    @Override
+    public void setVy(double vy) {
+        super.setVy(vy);
 
+        if(Math.abs(vy)<=0.15f){
+            this.vy=0;
+            this.setNotJump();
+        }
+    }
     public void jump(double power) {
         if (!jumping) {
             this.jumping = true;

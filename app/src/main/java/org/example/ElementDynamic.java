@@ -57,7 +57,7 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
             c.setB(element);
             c.setDistance(this.getCenter().distance(element.getCenter()));
             if (this.lastmotion != null) {
-                if (this.lastmotion != null) {
+                //if (this.lastmotion != null) {
                     rx = this.lastmotion.getMotioninx();
                     if (rx.intersects(element.getRectangle())) {
                         //se encuentra a la izquierda para restaurar negativo
@@ -80,7 +80,7 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
 
                             }
                         }
-                    }
+                   // }
 
                 }
                 //esta es la separación del objeto para que no se produzca colision

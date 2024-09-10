@@ -1,11 +1,11 @@
 package org.example;
 
 import java.util.ArrayList;
+
 import javafx.geometry.Rectangle2D;
 
 
 /**
- *
  * @author Administrador
  */
 public abstract class ElementMovable extends ElementDynamic implements IMovable {
@@ -49,9 +49,49 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
     }
 
     @Override
-    public void update(ArrayList<Element> elements){//}, Level l) {
+    public void update(ArrayList<Element> elements) {//}, Level l) {
         if (this.getState() == State.RUNNING) {
             this.move(getVx(), getVy());
+            var l = elements.stream().map(
+                            e -> {
+                                return this.collision(e);
+                            })
+                    .filter(c -> c.isPresent()).toList();
+
+            if (l.size() > 0) {
+
+                l.forEach(c -> {
+
+                   // if (c.get().getB().getName().equals("Suelo")) {
+                    //    setPosition(this.getRectangle().getMinX(), c.get().getB().rectangle.getMinY() - this.rectangle.getHeight());
+                   //     setVy(0);//-1*this.getVy()/2);
+                   // }
+                    //if (c.get().getB().getName().equals("Muro")) {
+                       // if (l.size() > 1) {
+
+                        if(c.get().getSeparator().getX()!=0) {
+                            System.out.println(c.get());
+                            if(c.get().getSeparator().getX()<0)
+                                this.setPosition(c.get().getB().rectangle.getMinX() - this.getWidth(), this.getRectangle().getMinY());
+                            else
+                                this.setPosition(c.get().getB().rectangle.getMaxX(), this.getRectangle().getMinY());
+                        }
+                        //else
+                            if(c.get().getSeparator().getY()!=0 || c.get().isIsover()){
+
+                            setPosition(this.getRectangle().getMinX(), c.get().getB().rectangle.getMinY() - this.rectangle.getHeight());
+                            setVy(0);//-1*this.getVy()/2);
+                            //this.setState(State.STOPPED);
+                        }
+                          //  this.setPosition(c.get().getB().rectangle.getMinX() - this.getWidth(), this.getRectangle().getMinY());
+                       // }
+                 //   }
+
+                });
+
+                //this.setState(State.STOPPED);
+
+            }
         }
 
     }
@@ -105,7 +145,7 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
     public void moveUp(double inc) {
         if (this.getState() == State.RUNNING) {
 
-            this.move(0,-inc);
+            this.move(0, -inc);
 
         }
     }
