@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
+
 public abstract class ElementDynamic extends Element implements ICollidable, IState {
 
     protected State state;
@@ -15,8 +17,8 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
         this.overGround = false;
     }
 
-    public ElementDynamic(double x, double y, double width, double height) {
-        super(x, y, width, height);
+    public ElementDynamic(double x, double y, double width, double height,float mass) {
+        super(x, y, width, height,mass);
         this.state = State.STOPPED;//RUNNING;
 
         this.overGround = false;
@@ -95,7 +97,7 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
 
     @Override
     public Optional<Collision> collision(Element element) {
-        Optional<Collision> oc = this.isOver(element);
+        Optional<Collision> oc =null;// this.isOver(element);
         //no esta sobre, toca mirar si se produce colisión
         if (oc == null || oc.isEmpty()
                 || (oc.get().getSeparator().getX() != 0 || oc.get().getSeparator().getY() != 0)) {

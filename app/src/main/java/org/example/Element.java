@@ -14,9 +14,11 @@ import javafx.scene.paint.Color;
 public class Element implements IDebuggable, IDrawable {
 
     //private javafx.geometry.Dimension2D d;
-    private Point2D screen_position;
+    private static float MAX_MASS=Float.MAX_VALUE;
+    protected Point2D screen_position;
     private boolean debug;
     protected Rectangle2D rectangle;
+    protected float mass;
     private Color color;
     protected Image img;
 
@@ -27,21 +29,27 @@ public class Element implements IDebuggable, IDrawable {
         this.rectangle = Rectangle2D.EMPTY;
     }
 
+    public Element(double x, double y, double width, double height,float mass) {
+        this.rectangle = new Rectangle2D(x, y, width, height);
+        this.screen_position= new Point2D(0,0);
+        this.mass=mass;
+    }
     public Element(double x, double y, double width, double height) {
         this.rectangle = new Rectangle2D(x, y, width, height);
         this.screen_position= new Point2D(0,0);
+        this.mass=MAX_MASS;
+    }
+    public void setMass(float mass) {
+        this.mass=mass;
+    }
+    public float getMass() {
+        return mass;
     }
 
-    /*   public javafx.geometry.Dimension2D getDimension() {
-        return d;
-    }
-
-    public void setDimension(javafx.geometry.Dimension2D d) {
-        this.d = d;
-    }*/
     public void setPosition(double x, double y) {
         this.rectangle = new Rectangle2D(x, y, this.rectangle.getWidth(), this.rectangle.getHeight());
     }
+
 
     @Override
     public void setDebug(boolean value) {
@@ -118,7 +126,9 @@ public class Element implements IDebuggable, IDrawable {
         gc.fillOval((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE - 5,
                 (this.getRectangle().getMinY()) * Game.SCALE - 5,
                 10, 10);
-
+        gc.fillOval((this.getCenterX() * Game.SCALE - 5),
+                (this.getCenterY()) * Game.SCALE - 5,
+                10, 10);
         gc.strokeText(" X:" + (int) (this.getRectangle().getMinX())
                         + " Y:" + (int) (this.getRectangle().getMinY()),
                 (this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE,

@@ -24,8 +24,8 @@ public abstract class ElementWithGravity extends ElementMovable implements IGrav
         this.gy = gy;
     }
 
-    public ElementWithGravity(double gx, double gy, double vx, double vy, double x, double y, double width, double height) {
-        super(vx, vy, x, y, width, height);
+    public ElementWithGravity(double gx, double gy, double vx, double vy, double x, double y, double width, double height,float mass) {
+        super(vx, vy, x, y, width, height,mass);
         this.gx = gx;
         this.gy = gy;
     }
@@ -102,10 +102,10 @@ public abstract class ElementWithGravity extends ElementMovable implements IGrav
         if (this.getState() == State.RUNNING) {
 
             if (this.isActiveHorizontalGravity()) {
-                this.vx = this.vx + this.gx;
+                this.vx = this.vx + this.gx*this.mass;
             }
             if (this.isActiveVerticalGravity()) {
-                this.vy = this.vy + this.gy;
+                this.vy = this.vy + this.gy*this.mass;
             }
             super.update(elements); //,l);
         }

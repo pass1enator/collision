@@ -4,8 +4,8 @@ public class ElementWithJump extends ElementWithGravity {
 
     private boolean jumping;
 
-    public ElementWithJump(double gx, double gy, double vx, double vy, double x, double y, double width, double height) {
-        super(gx, gy, vx, vy, x, y, width, height);
+    public ElementWithJump(double gx, double gy, double vx, double vy, double x, double y, double width, double height,float mass) {
+        super(gx, gy, vx, vy, x, y, width, height,mass);
         this.jumping = false;
     }
 

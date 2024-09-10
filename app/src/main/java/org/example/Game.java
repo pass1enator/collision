@@ -20,13 +20,16 @@ public class Game extends Clock implements IKeyListener {
     //private Board board;
     private GraphicsContext ctx, bg_context;
     private ElementWithJump element;
+
     private Element floor;
     private Element wall;
-    private Element p1,p2,p3, p4;
+    private Element p1,p2,p3, p4,p5,p6;
     private ArrayList<Element> elements;
     private boolean left=false;
     private boolean right=false;
     private boolean up=false;
+    private boolean down=false;
+    private boolean space=false;
     //private SrArthur hero;
 
     /**
@@ -42,14 +45,15 @@ public class Game extends Clock implements IKeyListener {
         this.ctx = context;
         this.bg_context = bg_context;
         this.original_size = original;
-        this.element = new ElementWithJump(0, 0.15f, 0.0f, 0, 0, 20, 10, 10);
+        this.element = new ElementWithJump(0, 0.2f, 0.0f, 0, 0, 20, 10, 10,1);
         this.element.setDebug(true);
         this.element.setColor(Color.BLUE);
+        this.element.activeGravity();
         this.floor = new Element(0, this.original_size.getHeight() - 10, this.original_size.getWidth(), 10);
         this.floor.setColor(Color.RED);
         this.floor.setDebug(true);
         this.floor.setName("Suelo");
-        this.wall = new Element(50, this.original_size.getHeight() - 60, 20, 60);
+        this.wall = new Element(200, this.original_size.getHeight() - 60, 20, 60);
         this.wall.setColor(Color.ORANGE);
         this.wall.setDebug(true);
         this.wall.setName("Muro");
@@ -72,6 +76,25 @@ public class Game extends Clock implements IKeyListener {
         this.p3.setDebug(true);
         this.p3.setName("Plataforma 3");
         this.elements.add(this.p3);
+
+        this.p4= new Element(90, this.original_size.getHeight() - 155, 40, 20);
+        this.p4.setColor(Color.GRAY);
+        this.p4.setDebug(true);
+        this.p4.setName("Plataforma 4");
+        this.elements.add(this.p4);
+
+        this.p5= new Element(160, this.original_size.getHeight() - 155, 40, 20);
+        this.p5.setColor(Color.ORANGE);
+        this.p5.setDebug(true);
+        this.p5.setName("Plataforma 5");
+        this.elements.add(this.p5);
+
+        this.p6= new Element(210, this.original_size.getHeight() - 155, 40, 20);
+        this.p6.setColor(Color.BLUE);
+        this.p6.setDebug(true);
+        this.p6.setName("Plataforma 6");
+        this.elements.add(this.p6);
+
 
         this.elements.add(this.floor);
         this.elements.add(this.wall);
@@ -96,15 +119,23 @@ public class Game extends Clock implements IKeyListener {
     private void procesInput() {
         if (this.left) {
             //this.left=true;
-            this.element.moveLeft(0.5);
+            this.element.moveLeft(0.25);
         }
         if (this.right) {
            // this.right=true;
-             this.element.moveRight(0.5);
+             this.element.moveRight(0.25);
+        }
+        if (this.down) {
+            //this.up=true;
+            this.element.moveDown(0.5);
         }
         if (this.up) {
             //this.up=true;
-             this.element.jump(-5);
+            this.element.moveUp(0.5);
+        }
+        if (this.space) {
+            //this.up=true;
+             this.element.jump(-6);
         }
     }
 
@@ -115,10 +146,12 @@ public class Game extends Clock implements IKeyListener {
 
     public void paint() {
         this.clear();
-        //this.ctx.clearRect(0,0,this.original_size.getWidth(),this.original_size.getHeight());
+        this.ctx.clearRect(0, 0, this.original_size.getWidth() * Game.SCALE, this.original_size.getHeight() * Game.SCALE);
+
         this.element.paint(this.ctx);
         this.elements.forEach( e-> e.paint(this.ctx));
-       // this.floor.paint(this.ctx);
+
+        // this.floor.paint(this.ctx);
     }
 
     @Override
@@ -144,7 +177,17 @@ public class Game extends Clock implements IKeyListener {
             this.up=true;
            // this.element.jump(-3);
         }
-
+        if(code== KeyCode.DOWN)
+            this.down=true;
+        if(code == KeyCode.SPACE)
+            this.space=true;
+        if(code== KeyCode.R){
+            this.element.setPosition(4,4);
+            this.element.setVy(0);
+            this.element.setVx(0);
+            this.element.setState(IState.State.RUNNING);
+            //this.element.setMass(this.element.getMass()+0.25f);
+        }
        /* switch (code){
             case LEFT -> this.element.moveLeft(0.5);
             case UP -> {
@@ -171,6 +214,10 @@ public class Game extends Clock implements IKeyListener {
             this.up=false;
             // this.element.jump(-3);
         }
+        if(code== KeyCode.DOWN)
+            this.down=false;
+        if(code == KeyCode.SPACE)
+            this.space=false;
 
     }
 

@@ -3,6 +3,9 @@ package org.example;
 import java.util.ArrayList;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 
 
 /**
@@ -12,14 +15,14 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
 
     protected double vx;
     protected double vy;
-
+    private static int MAX_SPEED=4;
     public ElementMovable() {
         super();
         this.state = State.STOPPED;//RUNNING;
     }
 
-    public ElementMovable(double vx, double vy, double x, double y, double width, double height) {
-        super(x, y, width, height);
+    public ElementMovable(double vx, double vy, double x, double y, double width, double height,float mass) {
+        super(x, y, width, height,mass);
         this.state = State.STOPPED;//RUNNING;
         this.vx = vx;
         this.vy = vy;
@@ -42,15 +45,62 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
             this.rectangle = r;
         }
     }
-
+    public void moveTo(double x, double y) {
+        if (this.state == State.RUNNING) {
+            this.updatelast(x, y);
+            Rectangle2D r = new Rectangle2D( x,
+                     y,
+                    this.getRectangle().getWidth(),
+                    this.getRectangle().getHeight());
+            this.rectangle = r;
+        }
+    }
     @Override
     public void move() {
         this.move(getVx(), getVy());
     }
+    private void friction(){
+        var friction=0.025f*this.mass;
+        if(this.vx>0){
+            this.vx-=friction;//0.02f;
+        }
+        else if(this.vx<0){
+            this.vx+=friction;//0.01f;
+        }
 
+        if(Math.abs(vx)<=0.2f)
+            this.vx = 0;
+
+    }
+    public void paint(GraphicsContext gc){
+
+        super.paint(gc);
+        //vectores velocidad en x,y
+        if(this.isDebug()){
+            gc.beginPath();
+            gc.setStroke(Color.GREEN);
+            gc.setLineCap( StrokeLineCap.ROUND );
+            gc.moveTo(this.getCenterX() * Game.SCALE,this.getCenterY() * Game.SCALE);
+            gc.setLineWidth(2.0);
+            gc.lineTo((this.getCenterX()+vx*10) * Game.SCALE,this.getCenterY() * Game.SCALE);
+            gc.stroke();
+           gc.setStroke(Color.BLUE);
+            gc.moveTo(this.getCenterX() * Game.SCALE,this.getCenterY() * Game.SCALE);
+            gc.setLineWidth(1.0);
+            gc.lineTo((this.getCenterX()) * Game.SCALE,(this.getCenterY()+vy*10) * Game.SCALE);
+            gc.stroke();
+            gc.setStroke(Color.RED);
+            gc.moveTo(this.getCenterX() * Game.SCALE,this.getCenterY() * Game.SCALE);
+            gc.setLineWidth(1.0);
+            gc.lineTo((this.getCenterX()+vx*10) * Game.SCALE,(this.getCenterY()+vy*10) * Game.SCALE);
+            gc.stroke();
+            gc.closePath();
+        }
+    }
     @Override
     public void update(ArrayList<Element> elements) {//}, Level l) {
         if (this.getState() == State.RUNNING) {
+            this.friction();
             this.move(getVx(), getVy());
             var l = elements.stream().map(
                             e -> {
@@ -61,31 +111,13 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
             if (l.size() > 0) {
 
                 l.forEach(c -> {
+                   // if(!c.get().getB().getName().equals("Suelo")){
 
-                   // if (c.get().getB().getName().equals("Suelo")) {
-                    //    setPosition(this.getRectangle().getMinX(), c.get().getB().rectangle.getMinY() - this.rectangle.getHeight());
-                   //     setVy(0);//-1*this.getVy()/2);
-                   // }
-                    //if (c.get().getB().getName().equals("Muro")) {
-                       // if (l.size() > 1) {
-
-                        if(c.get().getSeparator().getX()!=0) {
-                            System.out.println(c.get());
-                            if(c.get().getSeparator().getX()<0)
-                                this.setPosition(c.get().getB().rectangle.getMinX() - this.getWidth(), this.getRectangle().getMinY());
-                            else
-                                this.setPosition(c.get().getB().rectangle.getMaxX(), this.getRectangle().getMinY());
-                        }
-                        //else
-                            if(c.get().getSeparator().getY()!=0 || c.get().isIsover()){
-
-                            setPosition(this.getRectangle().getMinX(), c.get().getB().rectangle.getMinY() - this.rectangle.getHeight());
-                            setVy(0);//-1*this.getVy()/2);
-                            //this.setState(State.STOPPED);
-                        }
-                          //  this.setPosition(c.get().getB().rectangle.getMinX() - this.getWidth(), this.getRectangle().getMinY());
-                       // }
-                 //   }
+                     this.move(c.get().getSeparator().getX(), (c.get().getSeparator().getY()));
+                        if(Math.abs(c.get().getSeparator().getY())>0)
+                            setVy(0);
+                    if(Math.abs(c.get().getSeparator().getX())>0)
+                        setVx(0);
 
                 });
 
@@ -108,9 +140,10 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
     @Override
     public void moveLeft(double inc) {
         if (this.getState() == State.RUNNING) {
-
-            this.move(-inc, 0);
-
+            this.vx=this.getVx()-inc;
+            //this.move(-inc, 0);
+            if(this.vx<-MAX_SPEED)
+                this.vx=-MAX_SPEED;
         }
     }
 
@@ -126,8 +159,10 @@ public abstract class ElementMovable extends ElementDynamic implements IMovable 
     @Override
     public void moveRight(double inc) {
         if (this.getState() == State.RUNNING) {
-
-            this.move(inc, 0);
+            this.vx=this.getVx()+inc;
+            if(this.vx>MAX_SPEED)
+                this.vx=MAX_SPEED;
+            //this.move(inc, 0);
 
         }
     }
