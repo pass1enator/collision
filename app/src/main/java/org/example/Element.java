@@ -15,7 +15,7 @@ public class Element implements IDebuggable, IDrawable {
 
     //private javafx.geometry.Dimension2D d;
     private static float MAX_MASS=Float.MAX_VALUE;
-    protected Point2D screen_position;
+   // protected Point2D screen_position;
     private boolean debug;
     protected Rectangle2D rectangle;
     protected float mass;
@@ -31,12 +31,12 @@ public class Element implements IDebuggable, IDrawable {
 
     public Element(double x, double y, double width, double height,float mass) {
         this.rectangle = new Rectangle2D(x, y, width, height);
-        this.screen_position= new Point2D(0,0);
+       // this.screen_position= new Point2D(0,0);
         this.mass=mass;
     }
     public Element(double x, double y, double width, double height) {
         this.rectangle = new Rectangle2D(x, y, width, height);
-        this.screen_position= new Point2D(0,0);
+       // this.screen_position= new Point2D(0,0);
         this.mass=MAX_MASS;
     }
     public void setMass(float mass) {
@@ -48,6 +48,10 @@ public class Element implements IDebuggable, IDrawable {
 
     public void setPosition(double x, double y) {
         this.rectangle = new Rectangle2D(x, y, this.rectangle.getWidth(), this.rectangle.getHeight());
+
+    }
+    public Point2D getPosition(){
+        return new Point2D(this.rectangle.getMinX(), this.rectangle.getMinY());
     }
 
 
@@ -90,13 +94,7 @@ public class Element implements IDebuggable, IDrawable {
 
     }
 
-    public Point2D getScreenPosition() {
-        return this.screen_position;
-    }
 
-    public void setScreenPosition(Point2D position) {
-        this.screen_position = position;
-    }
 
     public double getDistance(Element e) {
         return this.getCenter().distance(e.getCenter());
@@ -119,20 +117,20 @@ public class Element implements IDebuggable, IDrawable {
     }
 
     @Override
-    public void debug(GraphicsContext gc) {
+    public void debug(GraphicsContext gc, Point2D cameraPosition) {
         //gc.setStroke(Color.RED);
         gc.setFill(this.color);
 
-        gc.fillOval((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE - 5,
-                (this.getRectangle().getMinY()) * Game.SCALE - 5,
+        gc.fillOval((this.getRectangle().getMinX() -cameraPosition.getX()) * Game.SCALE - 5,
+                (this.getRectangle().getMinY()- cameraPosition.getY()) * Game.SCALE- 5,
                 10, 10);
-        gc.fillOval((this.getCenterX() * Game.SCALE - 5),
-                (this.getCenterY()) * Game.SCALE - 5,
+        gc.fillOval(((this.getCenterX()-cameraPosition.getX()) * Game.SCALE) - 5,
+                (this.getCenterY()-cameraPosition.getY()) * Game.SCALE - 5,
                 10, 10);
         gc.strokeText(" X:" + (int) (this.getRectangle().getMinX())
                         + " Y:" + (int) (this.getRectangle().getMinY()),
-                (this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE,
-                (this.getRectangle().getMinY()) * Game.SCALE - 5);
+                (this.getRectangle().getMinX() -cameraPosition.getX()) * Game.SCALE ,
+                (this.getRectangle().getMinY() -cameraPosition.getY()) * Game.SCALE - 5 );
 
        // gc.setFill(this.color);
        // gc.fillRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
@@ -145,13 +143,21 @@ public class Element implements IDebuggable, IDrawable {
 
     @Override
     public void paint(GraphicsContext gc) {
+        //sin desplazamiento
+        this.paint(gc, new Point2D(0,0));
+    }
+    @Override
+    public void paint(GraphicsContext gc, Point2D cameraposition) {
         gc.setStroke(this.getColor());
 
-        gc.strokeRect((this.getRectangle().getMinX() - this.screen_position.getX()) * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        if (this.isDebug()) {
+        gc.strokeRect((this.getRectangle().getMinX() -cameraposition.getX()) * Game.SCALE,
+                (this.getRectangle().getMinY()-cameraposition.getY()) * Game.SCALE,
+                this.getRectangle().getWidth() * Game.SCALE,
+                this.getRectangle().getHeight() * Game.SCALE);
+      //  if (this.isDebug()) {
 
-            this.debug(gc);
-        }
+            this.debug(gc,cameraposition);
+     //   }
     }
 
 }

@@ -1,5 +1,6 @@
 package org.example;
 
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -9,4 +10,5 @@ import javafx.scene.canvas.GraphicsContext;
 public interface IDrawable {
 
     public void paint(GraphicsContext gc);
+    public void paint(GraphicsContext gc, Point2D cameraPosition);
 }

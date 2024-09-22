@@ -26,8 +26,6 @@ public class App extends Application{
     // private String pathfondos = "escenarios.png";
     @Override
     public void start(Stage stage) {
-        //var javaVersion = SystemInfo.javaVersion();
-        //var javafxVersion = SystemInfo.javafxVersion();
 
         primer_plano = new Canvas(this.width * Game.SCALE, (this.height) * Game.SCALE); //Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
         fondo = new Canvas(this.width * Game.SCALE, (this.height) * Game.SCALE); //Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");

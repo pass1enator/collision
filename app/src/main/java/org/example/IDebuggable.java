@@ -1,4 +1,5 @@
 package org.example;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 public interface IDebuggable {
 
@@ -13,6 +14,6 @@ public interface IDebuggable {
     /**
      * @param gc
      */
-    public void debug(GraphicsContext gc);
+    public void debug(GraphicsContext gc, Point2D cameraPosition);
 
 }

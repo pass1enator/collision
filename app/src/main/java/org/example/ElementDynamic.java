@@ -57,9 +57,9 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
             c = new Collision();
             c.setA(this);
             c.setB(element);
+
             c.setDistance(this.getCenter().distance(element.getCenter()));
             if (this.lastmotion != null) {
-                //if (this.lastmotion != null) {
                     rx = this.lastmotion.getMotioninx();
                     if (rx.intersects(element.getRectangle())) {
                         //se encuentra a la izquierda para restaurar negativo
@@ -70,7 +70,9 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
                             dx = Math.abs((this.getCenterX() - element.getCenterX()) - (this.getWidth() / 2 + element.getWidth() / 2));
 
                         }
-                    } else {
+                    }
+                   // else
+                    {
                         ry = this.lastmotion.getMotioniny();
                         if (ry.intersects(element.getRectangle())) {
                             //se encuentra en la parte superior para restaurar negativo
@@ -87,10 +89,12 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
                 }
                 //esta es la separación del objeto para que no se produzca colision
                 c.setSeparator(new Point2D(dx, dy));
-                //System.out.println("Se produce una colision que no es borde con" + c.getSeparator());
-
             }
+
         }
+
+        //si existe colision devuelve los dos objetos que colisionan, la distancia a los centros de los objetos y
+        //cuanto se han de separar para justo no colisionar (el objeto A)
         return c == null ? Optional.empty() : Optional.of(c);
 
     }
@@ -99,14 +103,14 @@ public abstract class ElementDynamic extends Element implements ICollidable, ISt
     public Optional<Collision> collision(Element element) {
         Optional<Collision> oc =null;// this.isOver(element);
         //no esta sobre, toca mirar si se produce colisión
-        if (oc == null || oc.isEmpty()
-                || (oc.get().getSeparator().getX() != 0 || oc.get().getSeparator().getY() != 0)) {
+        //if (oc == null || oc.isEmpty()
+              //  || (oc.get().getSeparator().getX() != 0 || oc.get().getSeparator().getY() != 0)) {
             oc = this.collisionWithElement(element);
 
-            this.setOverGround(false);
-        } else {
-            this.setOverGround(true);
-        }
+           // this.setOverGround(false);
+       // } //else {
+        //    this.setOverGround(true);
+       // }
         return oc;
 
     }
